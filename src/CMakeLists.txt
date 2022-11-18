@@ -15,6 +15,5 @@ target_sources(${TARGET}
 #######################################################################
 target_link_libraries(${TARGET}
 	Gpio
-	Boost::system
 	pthread
 )

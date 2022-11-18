@@ -1,124 +1,93 @@
 #include <gpiod.hpp>
 
-#include <boost/asio.hpp>
 #include <fstream>
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 class Worker
 {
 public:
-	explicit Worker(boost::asio::io_context& io);
+	Worker();
 	~Worker();
 
+	void Run();
 private:
-	void ScheduleMeasure();
-	void ExecuteMeasure();
-
-	void SchedulePWM();
-	void ExecutePWM();
-
-	boost::asio::io_context& m_io;
-	boost::asio::steady_timer m_timer_measure;
-	boost::asio::steady_timer m_timer_pwm;
-
 	gpiod::line m_fan_on;
-	int m_pwm_duty_ratio = 0;
-	int m_pwm_state = 0;
 };
 
-Worker::Worker(boost::asio::io_context& io)
-	: m_io(io), m_timer_measure(m_io, boost::asio::chrono::seconds(5)),
-	  m_timer_pwm(m_io, boost::asio::chrono::milliseconds(10))
+Worker::Worker()
 {
 	// get the gpio lines
 	gpiod::chip chip("gpiochip0");
 	m_fan_on = chip.get_line(13);
 	m_fan_on.request({"FanControl", gpiod::line_request::DIRECTION_OUTPUT});
-
-	ScheduleMeasure();
-	SchedulePWM();
 }
 Worker::~Worker() { m_fan_on.set_value(0); }
 
-void Worker::ScheduleMeasure()
+void Worker::Run()
 {
-	m_timer_measure.async_wait([this](const boost::system::error_code& ec) {
-		this->ExecuteMeasure();
-	});
-}
+	using namespace std::chrono;
+	
+	steady_clock::duration on_time = milliseconds(0);	
+	steady_clock::duration off_time = milliseconds(100);	
 
-void Worker::ExecuteMeasure()
-{
-	std::ifstream ifs("/sys/class/thermal/thermal_zone0/temp");
-	if (ifs.is_open())
+	while (1)
 	{
-		double temp = 0.0;
-		ifs >> temp;
-		temp /= 1000.0;
-
-		if (temp > 30.0)
+		std::ifstream ifs("/sys/class/thermal/thermal_zone0/temp");
+		if (ifs.is_open())
 		{
-			m_pwm_duty_ratio = 40;
+			int temp = 0.0;
+			ifs >> temp;
+			temp /= 1000;
+	
+			if (temp > 65)
+			{
+				on_time = milliseconds(100);
+				off_time = milliseconds(0);
+			}
+			else if (temp > 60)
+			{
+				on_time = milliseconds(90);
+				off_time = milliseconds(10);
+			}
+			else if (temp > 55)
+			{
+				on_time = milliseconds(75);
+				off_time = milliseconds(25);
+			}
+			else if (temp > 50)
+			{
+				on_time = milliseconds(50);
+				off_time = milliseconds(50);
+			}
+			else if (temp > 30)
+			{
+				on_time = milliseconds(40);
+				off_time = milliseconds(60);
+			}
+			else
+			{
+				on_time = milliseconds(0);
+				off_time = milliseconds(1000);
+			}
 		}
-		if (temp > 50.0)
-		{
-			m_pwm_duty_ratio = 50;
-		}
-		if (temp > 55.0)
-		{
-			m_pwm_duty_ratio = 75;
-		}
-		if (temp > 60.0)
-		{
-			m_pwm_duty_ratio = 90;
-		}
-		if (temp > 65.0)
-		{
-			m_pwm_duty_ratio = 100;
-		}
-		if (temp <= 30.0)
-		{
-			m_pwm_duty_ratio = 0;
-		}
-	}
-
-	ScheduleMeasure();
-}
-
-void Worker::SchedulePWM()
-{
-	m_timer_measure.async_wait(
-		[this](const boost::system::error_code& ec) { this->ExecutePWM(); });
-}
-void Worker::ExecutePWM()
-{
-	if (++m_pwm_state >= 100)
-	{
-		m_pwm_state = 0;
-	}
-
-	if (m_pwm_state <= m_pwm_duty_ratio)
-	{
+	
 		m_fan_on.set_value(1);
-	}
-	else
-	{
+		std::this_thread::sleep_for(on_time);
+		
 		m_fan_on.set_value(0);
+		std::this_thread::sleep_for(off_time);
 	}
-
-	SchedulePWM();
 }
 
 int main(int argc, char** argv)
 {
 	try
 	{
-		boost::asio::io_context io;
-
-		Worker worker(io);
-
-		io.run();
-
+		Worker w;
+		w.Run();
+		
 		return EXIT_SUCCESS;
 	}
 	catch (const std::error_code& ec)
