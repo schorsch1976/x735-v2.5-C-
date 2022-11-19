@@ -39,7 +39,7 @@ It's not hard to compile ``x735-v2.5-C++`` yourself though:
 ~~~
 sudo apt install cmake g++ build-essential libgpiod-dev
 git clone https://github.com/schorsch1976/x735-v2.5-C-.git
-cd x735-v2.5-C++
+cd x735-v2.5-C-
 bash install.sh
 ~~~
 
