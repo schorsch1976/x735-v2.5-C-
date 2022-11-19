@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 
-project(	FanControl
+project(	x735-v2.5-C++
 			LANGUAGES	CXX
 			DESCRIPTION	"FanControl for Raspberry Pi4 with X735")
 

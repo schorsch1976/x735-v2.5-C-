@@ -1,4 +1,4 @@
-set(TARGET	FanSpeed)
+set(TARGET	x735-fanspeed)
 
 #######################################################################
 # Executable

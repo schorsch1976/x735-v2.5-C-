@@ -1,0 +1,9 @@
+[Unit]
+Description=x735 fan control service
+After=multi-user.target
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/local/bin/x735-fancontrol
+[Install]
+WantedBy=multi-user.target

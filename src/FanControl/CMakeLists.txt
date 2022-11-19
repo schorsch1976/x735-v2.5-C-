@@ -1,4 +1,4 @@
-set(TARGET	FanControl)
+set(TARGET	x735-fancontrol)
 
 #######################################################################
 # Executable
