@@ -1,19 +1,2 @@
-set(TARGET	FanControl)
-
-#######################################################################
-# Executable
-#######################################################################
-add_executable(${TARGET})
-
-target_sources(${TARGET}
-	PRIVATE
-			main.cpp
-)
-
-#######################################################################
-# Libraries
-#######################################################################
-target_link_libraries(${TARGET}
-	Gpio
-	pthread
-)
+add_subdirectory(FanControl)
+add_subdirectory(FanSpeed)

@@ -1,8 +1,8 @@
 #include <gpiod.hpp>
 
+#include <chrono>
 #include <fstream>
 #include <iostream>
-#include <chrono>
 #include <thread>
 
 class Worker
@@ -12,6 +12,7 @@ public:
 	~Worker();
 
 	void Run();
+
 private:
 	gpiod::line m_fan_on;
 };
@@ -28,9 +29,9 @@ Worker::~Worker() { m_fan_on.set_value(0); }
 void Worker::Run()
 {
 	using namespace std::chrono;
-	
-	steady_clock::duration on_time = milliseconds(0);	
-	steady_clock::duration off_time = milliseconds(100);	
+
+	steady_clock::duration on_time = milliseconds(0);
+	steady_clock::duration off_time = milliseconds(100);
 
 	while (1)
 	{
@@ -40,7 +41,7 @@ void Worker::Run()
 			int temp = 0.0;
 			ifs >> temp;
 			temp /= 1000;
-	
+
 			if (temp > 65)
 			{
 				on_time = milliseconds(100);
@@ -72,10 +73,10 @@ void Worker::Run()
 				off_time = milliseconds(1000);
 			}
 		}
-	
+
 		m_fan_on.set_value(1);
 		std::this_thread::sleep_for(on_time);
-		
+
 		m_fan_on.set_value(0);
 		std::this_thread::sleep_for(off_time);
 	}
@@ -87,7 +88,7 @@ int main(int argc, char** argv)
 	{
 		Worker w;
 		w.Run();
-		
+
 		return EXIT_SUCCESS;
 	}
 	catch (const std::error_code& ec)
