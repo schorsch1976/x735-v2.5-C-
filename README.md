@@ -5,7 +5,7 @@ control and read the installed fan speed.
 
 ## First things first: How can I get it?
 
-> git clone https://github.com/schorsch1976/x735-v2.5-C++.
+> git clone https://github.com/schorsch1976/x735-v2.5-C-.git.
 
 This is my public (but not main repository). It is used to publish released versions and
 for bug/issue tracking.
@@ -38,7 +38,7 @@ It's not hard to compile ``x735-v2.5-C++`` yourself though:
 
 ~~~
 sudo apt install cmake g++ build-essential libgpiod-dev
-git clone https://github.com/schorsch1976/x735-v2.5-C++
+git clone https://github.com/schorsch1976/x735-v2.5-C-.git
 cd x735-v2.5-C++
 bash install.sh
 ~~~
@@ -55,7 +55,7 @@ RPM: 2007
 
 ### Does it use much CPU power? My Pi4 is already sweating heavily ...
 
-![cpuusage](https://github.com/schorsch1976/x735-v2.5-C++/blob/master/images/cpuusage.png?raw=true)
+![cpuusage](https://github.com/schorsch1976/x735-v2.5-C/blob/master/images/cpuusage.png?raw=true)
 
 
 ### OK, but how can i get rid of it again?
