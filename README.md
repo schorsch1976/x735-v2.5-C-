@@ -13,11 +13,9 @@ for bug/issue tracking.
 ## Why rewritten?
 
 My goal was to use a "vanilla" debian bullyeye on the raspberry pi4 but still have the
-fan not running on maximum speed. The python3 libraries used at the [original](https://wiki.geekworm.com/X735_V2.5_Software) and the
-forked version from [thorkseng](https://github.com/thorkseng/x735-v2.5) dont work on a
-vanilla debian system.
+fan not running on maximum speed. The python3 libraries used at the [original](https://wiki.geekworm.com/X735_V2.5_Software) and the forked version from [thorkseng](https://github.com/thorkseng/x735-v2.5) dont work on a vanilla debian system.
 
-So: One of the most fundamental and widespread programming languages is C/C++.
+So: One of the most fundamental and widespread programming languages is C/C++ was used.
 
 ---
 
@@ -42,16 +40,28 @@ It's not hard to compile ``x735-v2.5-C++`` yourself though:
 sudo apt install cmake g++ build-essential libgpiod-dev
 git clone https://github.com/schorsch1976/x735-v2.5-C++
 cd x735-v2.5-C++
-./install.sh
+bash install.sh
 ~~~
 
-Now the binaries are installed in ``/usr/local/bin``. Also the service file is installed.
-To enable it:
+Now the binaries are installed in ``/usr/local/bin``. Also the service file is installed
+and the fan should already be running.
+
+### OK, How to read the fan speed?
+
 ~~~
-sudo systemctl enable x735-fancontrol.service
+georg@rpi4-rt:~$ x735-fanspeed
+RPM: 2007
 ~~~
 
-To start it immediatly:
+### Does it use much CPU power? My Pi4 is already sweating heavily ...
+
+![cpuusage](https://github.com/schorsch1976/x735-v2.5-C++/blob/master/images/cpuusage.png?raw=true)
+
+
+### OK, but how can i get rid of it again?
+
 ~~~
-sudo systemctl start x735-fancontrol.service
+...
+cd x735-v2.5-C++
+bash uninstall.sh
 ~~~
