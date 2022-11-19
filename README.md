@@ -49,13 +49,13 @@ and the fan should already be running.
 ### OK, How to read the fan speed?
 
 ~~~
-georg@rpi4-rt:~$ x735-fanspeed
+georg@rpi4-rt:~$ x735-fanspeed 
 RPM: 2007
 ~~~
 
 ### Does it use much CPU power? My Pi4 is already sweating heavily ...
 
-![cpuusage](https://github.com/schorsch1976/x735-v2.5-C/blob/master/images/cpuusage.png?raw=true)
+![cpuusage](https://github.com/schorsch1976/x735-v2.5-C-/blob/master/images/cpuusage.png?raw=true)
 
 
 ### OK, but how can i get rid of it again?
@@ -65,3 +65,4 @@ RPM: 2007
 cd x735-v2.5-C++
 bash uninstall.sh
 ~~~
+
